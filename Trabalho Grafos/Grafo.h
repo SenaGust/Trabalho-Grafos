@@ -1,11 +1,8 @@
 #pragma once
-
-
 #include <iostream>
 #include <list>
 #include< stdlib.h>
 #include "Controle.h"
-
 
 using namespace std;
 
@@ -56,39 +53,47 @@ public:
 		1. Todos os vértices possuem label auxDijkstra com infinito e Marcar todos como não analisados
 		2. Origem.auxDijkstra recebe 0
 		3. Enquanto o vertice de destino não for analisado
-			3.0 Selecione o vertice V com menor valor de auxDijkstra
-			3.1 Para todos os vizinhos i
-				3.1.1 auxSoma = v.auxDijkstra + aresta(V, vizinho[i]);
-				3.1.2 se vizinho.auxDijkstra for maior do que auxSoma,
+			3.1 Selecione o vertice V com menor valor de auxDijkstra
+			3.2 Para todos os vizinhos i
+				3.2.1 auxSoma = v.auxDijkstra + aresta(V, vizinho[i]);
+				3.2.2 se vizinho.auxDijkstra for maior do que auxSoma,
 					vizinho.auxDijkstra = auxSoma;
-			3.2 Marque Vertice V como analisado
+			3.3 Marque Vertice V como analisado
 		4. Retorne auxDijkstra do vertice de destino
 		*/
 
+		//1
 		for (size_t pos = 0; pos < Controle::qtdeMaxVertice; pos++)
 		{
 			Vertices[pos].auxDijkstra = 10000;
 			Vertices[pos].visitado = false;
 		}
 
+		//2
 		Vertices[verticeOrigem].auxDijkstra = 0;
 
+		//3
 		while (!Vertices[VerticeDestino].visitado)
 		{
+			//3.1
 			int V = menorValorDijkstra();
 
+			//3.2
 			list <int> ::iterator it;
 			for (it = listaAdjascente[V].begin(); it != listaAdjascente[V].end(); it++)
 			{
+				//3.2.1
 				int auxSoma = Vertices[V].auxDijkstra + Matriz[V][*it];
 
+				//3.2.2
 				if (Vertices[*it].auxDijkstra > auxSoma)
 					Vertices[*it].auxDijkstra = auxSoma;
 			}
+			//3.3
 			Vertices[V].visitado = true;
-			cout << "Acabou de ser analizado: " << V << endl;
 		}
 
+		//4
 		return (Vertices[VerticeDestino].auxDijkstra);
 	}
 
@@ -122,8 +127,6 @@ private:
 				}
 		}
 
-		cout << "menor: " << posMenor << endl;
 		return posMenor;
 	}
 };
-
