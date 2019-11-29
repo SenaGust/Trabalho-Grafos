@@ -108,16 +108,22 @@ private:
 	//Gustavo e Lorena
 	int menorValorDijkstra()
 	{
-		int menor = INT_MAX;
+		Vertice auxMenor;
+		int posMenor = -1;
+		auxMenor.auxDijkstra = INT16_MAX;
 
-		for (size_t pos = 1; pos < Controle::qtdeMaxVertice; pos++)
+		for (size_t pos = 0; pos < Controle::qtdeMaxVertice; pos++)
 		{
-			if (menor > Vertices[pos].auxDijkstra)
-					menor = pos;
+			if (auxMenor.auxDijkstra > Vertices[pos].auxDijkstra)
+				if (!Vertices[pos].visitado)
+				{
+					auxMenor = Vertices[pos];
+					posMenor = pos;
+				}
 		}
 
-		cout << "menor" << menor;
-		return menor;
+		cout << "menor: " << posMenor << endl;
+		return posMenor;
 	}
 };
 
