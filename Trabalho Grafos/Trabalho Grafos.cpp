@@ -24,5 +24,5 @@ int main()
 	grafo.ExibirListaGrafo();
 	grafo.ExibirMatrizGrafo();
 
-	cout << "Resultado: " << grafo.menorCaminhoDijkstra(0,5) << endl;
+	cout << "Resultado: " << grafo.menorCaminhoDijkstra(0,4) << endl;
 }
