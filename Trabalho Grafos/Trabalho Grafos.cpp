@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
+#include <list>
 #include "Grafo.h"
 #include "Controle.h"
 #include "Vertice.h"
@@ -22,8 +23,25 @@ int main()
 	grafo.AdicionarAresta(6 - 1, 4 - 1, 4, 4);
 
 	grafo.ExibirListaGrafo();
-	grafo.ExibirMatrizGrafoCusto();
-	grafo.ExibirMatrizGrafoTempo();
+	//grafo.ExibirMatrizGrafoCusto();
+	//grafo.ExibirMatrizGrafoTempo();
 
-	cout << "Resultado: " << grafo.menorCaminhoDijkstra(0,4,0) << endl;
+	int origem = 0;
+	int fim = 2;
+
+	//Resultado Busca em Largura
+	cout << "\n\nBusca em Largura: " << endl;
+	list<int> auxImpressao = grafo.buscaLargura(origem, fim);
+	list<int> ::iterator it;
+
+	for (it = auxImpressao.begin(); it != auxImpressao.end(); it++)
+		cout  << " -> " << *it;
+	cout << endl;
+
+	//Resultado Menor Caminho
+	cout << "\n\nMenor Caminho Dijkstra: " << endl;
+	cout << grafo.menorCaminhoDijkstra(origem, fim, 0) << endl;
+
+	//Resultado arvore Minima
+	grafo.arvoreMinima();
 }

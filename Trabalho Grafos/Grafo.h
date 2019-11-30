@@ -15,11 +15,17 @@ public:
 
 	void AdicionarAresta(int primeiroVertice, int segundoVertice, int pesoDistancia, int pesoCusto)
 	{
+		//Verificamos se os valores estão corretos
 		if (primeiroVertice != segundoVertice && segundoVertice < Controle::qtdeMaxVertice && primeiroVertice < Controle::qtdeMaxVertice)
 		{
+			//Como o grafo é não-direcionado, inserimos em ambas as direções
 			AdicionarArestaMatrizPesoCusto(primeiroVertice, segundoVertice, pesoCusto);
 			AdicionarArestaMatrizPesoDistancia(primeiroVertice, segundoVertice, pesoDistancia);
 			AdicionarArestaListaAdjascente(primeiroVertice, segundoVertice);
+
+			AdicionarArestaMatrizPesoCusto(segundoVertice, primeiroVertice, pesoCusto);
+			AdicionarArestaMatrizPesoDistancia(segundoVertice, primeiroVertice, pesoDistancia);
+			AdicionarArestaListaAdjascente(segundoVertice, primeiroVertice);
 		}
 	}
 	void ExibirListaGrafo()
@@ -121,20 +127,19 @@ public:
 	list<int> buscaLargura(int verticeOrigem, int VerticeDestino)
 	{
 		/*
-		Busca em largura
-
-		1. Cria uma List<int> fila
-		2. Cria uma List<int> fila_visitados
-		3. Marca todos os vértices como não visitados
-		4. Marca o vértice inicial como visitado
-		5. Adiciona o vertice inicial na fila
-		6. Enquanto a fila não estiver vazia e o vértice de destino não for visitado
-			6.1 Tira o vertice inicial da fila
-			6.2 Adiciona ele na lista visitados
-			6.3 For com o iterator que eu não sei como funciona)
-				6.3.1 Se o vertice(iterator) não estiver visitado
-				6.3.1.1 Marca ele como visitado
-				6.3.2 Coloca ele na fila
+		1. Criamos lista chamada resultadoBuscaLargura
+		2. Criamos outra lista chamada listaBusca usada na busca em largura
+		3. Marcamos todos os vértices como não visitados
+		4. Inserimos a origem na listaBusca
+		5. Enquanto o destino não for visitado ou a listaBusca não estiver vazia
+			5.1 Retiramos o primeiro vértice V
+			5.2 Se V não foi visitado, marcamos como visitado 
+			5.3 inserimos na lista resultadoBuscaLargura
+			5.4 Criamos uma lista vizinhos contendo todos os vizinhos de V
+			5.5 Enquanto existir vizinhos de V
+				5.5.1 Retiramos o vizinho W
+				5.5.2 Se o vizinho W não for visitado, inserimos na listaBusca
+		6. Se o destino não for encontrado, retornamos a lista vazia para mostrar que não é possível chegar no local
 		*/
 
 		//1
@@ -148,47 +153,48 @@ public:
 			Vertices[pos].visitado = false;
 
 		//4
-		//[verticeOrigem].visitado = true;
-		
-		//5
 		listaBusca.push_back(verticeOrigem);
 
-		//6
+		//5
 		while (!Vertices[VerticeDestino].visitado && !listaBusca.empty())
 		{
-			//6.1 Retirando primeiro vertice da fila 
+			//5.1
 			int vertice = listaBusca.front();
 			listaBusca.pop_front();
 
-			//6.2
+			//5.2
 			if (!Vertices[vertice].visitado)
 				resultadoBuscaLargura.push_back(vertice);
-
+			//5.3
 			Vertices[vertice].visitado = true;
 
-			//Pré 6.3
+			//5.4
 			list<int> vizinhos;
 			list <int> ::iterator auxIterator;
 			for (auxIterator = listaAdjascente[vertice].begin(); auxIterator != listaAdjascente[vertice].end(); auxIterator++)
 				vizinhos.push_back(*auxIterator);
 
-			//6.3
+			//5.5
 			while (!vizinhos.empty())
 			{
+				//A ordem foi invertida por causa da linguagem
+				//5.5.2
 				if (!Vertices[vizinhos.front()].visitado)
 					listaBusca.push_back(vizinhos.front());
 				
+				//5.5.1
 				vizinhos.pop_front();
 			}
 		}
 
+		//6.
 		if (!Vertices[VerticeDestino].visitado)
 			resultadoBuscaLargura.clear();
 
+		//7. 
 		return resultadoBuscaLargura;
 	}
 	
-	//Em qualPeso use 0, para tempo; 1, para Custo.
 	Grafo arvoreMinima()
 	{
 		/*
@@ -258,7 +264,6 @@ private:
 		listaAdjascente[primeiroVertice].push_back(segundoVertice);
 	}
 
-	//Gustavo e Lorena
 	int menorValorDijkstra()
 	{
 		Vertice auxMenor;
