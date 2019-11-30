@@ -3,6 +3,8 @@
 #include <list>
 #include< stdlib.h>
 #include "Controle.h"
+#include "Arestas.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -115,6 +117,7 @@ public:
 		//4
 		return (Vertices[VerticeDestino].auxDijkstra);
 	}
+	
 	list<int> buscaLargura(int verticeOrigem, int VerticeDestino)
 	{
 		/*
@@ -179,7 +182,62 @@ public:
 			}
 		}
 
+		if (!Vertices[VerticeDestino].visitado)
+			resultadoBuscaLargura.clear();
+
 		return resultadoBuscaLargura;
+	}
+	
+	//Em qualPeso use 0, para tempo; 1, para Custo.
+	Grafo arvoreMinima()
+	{
+		/*
+		1. Criando subgrafo com todas as arestas
+		2. Ordenando todas as arestas  de forma não decrescente
+		3. Enquanto não incluirmos (|v| - 1) vértices
+			3.1 Retiramos a primeira aresta
+			3.2 Verificamos se os dois vértices fazem parte do mesmo grupo conexo utilizando busca em largura
+			3.3 Se não encontrarmos na busca em largura, inserimos essa aresta no subgrafo
+		4. Retornamos o subgrafo criado
+		*/
+
+		//1.
+		Grafo arvoreMinima;
+		
+		//2.
+		list<Arestas> todasArestas;
+
+		for (int coluna = 0; coluna < Controle::qtdeMaxVertice; coluna++)
+			for (int linha = 0; linha < Controle::qtdeMaxVertice; linha++)
+				if (MatrizPesoTempo[linha][coluna] > 0)
+				{
+					Arestas aux(linha, coluna, MatrizPesoTempo[linha][coluna]);
+					todasArestas.push_back(aux);
+				}
+
+		todasArestas.sort();
+
+		//3.
+		int nIncluidos = 0;
+		while (nIncluidos < Controle::qtdeMaxVertice - 1)
+		{
+			//3.1
+			Arestas aux = todasArestas.front();
+			todasArestas.pop_front();
+
+			//3.2
+			list<int> auxBusca = arvoreMinima.buscaLargura(aux.vertice1, aux.vertice2);
+
+			//3.3
+			if(auxBusca.size() == 0) //se não encontrou na busca em lagura
+			{
+				arvoreMinima.AdicionarAresta(aux.vertice1, aux.vertice2, aux.peso, 0);
+				nIncluidos++;
+			}
+		}
+
+		//4.
+		return arvoreMinima;
 	}
 
 private:
