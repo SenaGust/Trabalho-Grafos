@@ -115,6 +115,72 @@ public:
 		//4
 		return (Vertices[VerticeDestino].auxDijkstra);
 	}
+	list<int> buscaLargura(int verticeOrigem, int VerticeDestino)
+	{
+		/*
+		Busca em largura
+
+		1. Cria uma List<int> fila
+		2. Cria uma List<int> fila_visitados
+		3. Marca todos os vértices como não visitados
+		4. Marca o vértice inicial como visitado
+		5. Adiciona o vertice inicial na fila
+		6. Enquanto a fila não estiver vazia e o vértice de destino não for visitado
+			6.1 Tira o vertice inicial da fila
+			6.2 Adiciona ele na lista visitados
+			6.3 For com o iterator que eu não sei como funciona)
+				6.3.1 Se o vertice(iterator) não estiver visitado
+				6.3.1.1 Marca ele como visitado
+				6.3.2 Coloca ele na fila
+		*/
+
+		//1
+		list<int> resultadoBuscaLargura;
+
+		//2
+		list<int> listaBusca;
+
+		//3
+		for (size_t pos = 0; pos < Controle::qtdeMaxVertice; pos++)
+			Vertices[pos].visitado = false;
+
+		//4
+		//[verticeOrigem].visitado = true;
+		
+		//5
+		listaBusca.push_back(verticeOrigem);
+
+		//6
+		while (!Vertices[VerticeDestino].visitado && !listaBusca.empty())
+		{
+			//6.1 Retirando primeiro vertice da fila 
+			int vertice = listaBusca.front();
+			listaBusca.pop_front();
+
+			//6.2
+			if (!Vertices[vertice].visitado)
+				resultadoBuscaLargura.push_back(vertice);
+
+			Vertices[vertice].visitado = true;
+
+			//Pré 6.3
+			list<int> vizinhos;
+			list <int> ::iterator auxIterator;
+			for (auxIterator = listaAdjascente[vertice].begin(); auxIterator != listaAdjascente[vertice].end(); auxIterator++)
+				vizinhos.push_back(*auxIterator);
+
+			//6.3
+			while (!vizinhos.empty())
+			{
+				if (!Vertices[vizinhos.front()].visitado)
+					listaBusca.push_back(vizinhos.front());
+				
+				vizinhos.pop_front();
+			}
+		}
+
+		return resultadoBuscaLargura;
+	}
 
 private:
 	list<int>* listaAdjascente = new list<int>[Controle::qtdeMaxVertice];
