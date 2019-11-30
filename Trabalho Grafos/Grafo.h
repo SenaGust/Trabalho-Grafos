@@ -11,11 +11,12 @@ class Grafo
 public:
 	Vertice Vertices[Controle::qtdeMaxVertice];
 
-	void AdicionarAresta(int primeiroVertice, int segundoVertice, int peso)
+	void AdicionarAresta(int primeiroVertice, int segundoVertice, int pesoDistancia, int pesoCusto)
 	{
 		if (primeiroVertice != segundoVertice && segundoVertice < Controle::qtdeMaxVertice && primeiroVertice < Controle::qtdeMaxVertice)
 		{
-			AdicionarArestaMatriz(primeiroVertice, segundoVertice, peso);
+			AdicionarArestaMatrizPesoCusto(primeiroVertice, segundoVertice, pesoCusto);
+			AdicionarArestaMatrizPesoDistancia(primeiroVertice, segundoVertice, pesoDistancia);
 			AdicionarArestaListaAdjascente(primeiroVertice, segundoVertice);
 		}
 	}
@@ -32,7 +33,7 @@ public:
 			cout << endl;
 		}
 	}
-	void ExibirMatrizGrafo()
+	void ExibirMatrizGrafoCusto()
 	{
 		cout << "Exibindo matriz" << endl;
 
@@ -40,14 +41,27 @@ public:
 		for (size_t linha = 0; linha < Controle::qtdeMaxVertice; linha++)
 		{
 			for (size_t coluna = 0; coluna < Controle::qtdeMaxVertice; coluna++)
-				cout << Matriz[linha][coluna] << " ";
+				cout << MatrizPesoCusto[linha][coluna] << " ";
+
+			cout << "\n";
+		}
+	}
+	void ExibirMatrizGrafoTempo()
+	{
+		cout << "Exibindo matriz" << endl;
+
+		//Exibindo matriz
+		for (size_t linha = 0; linha < Controle::qtdeMaxVertice; linha++)
+		{
+			for (size_t coluna = 0; coluna < Controle::qtdeMaxVertice; coluna++)
+				cout << MatrizPesoTempo[linha][coluna] << " ";
 
 			cout << "\n";
 		}
 	}
 
-	//Gustavo e Lorena
-	int menorCaminhoDijkstra(int verticeOrigem, int VerticeDestino)
+	//Em qualPeso use 0, para tempo; 1, para Custo.
+	int menorCaminhoDijkstra(int verticeOrigem, int VerticeDestino, int qualPeso)
 	{
 		/*
 		1. Todos os vértices possuem label auxDijkstra com infinito e Marcar todos como não analisados
@@ -82,8 +96,13 @@ public:
 			list <int> ::iterator it;
 			for (it = listaAdjascente[V].begin(); it != listaAdjascente[V].end(); it++)
 			{
+				int auxSoma = 0;
+
 				//3.2.1
-				int auxSoma = Vertices[V].auxDijkstra + Matriz[V][*it];
+				if (qualPeso == 0)
+					auxSoma = Vertices[V].auxDijkstra + MatrizPesoTempo[V][*it];
+				else //if(qualPeso == 1)
+					auxSoma = Vertices[V].auxDijkstra + MatrizPesoCusto[V][*it];
 
 				//3.2.2
 				if (Vertices[*it].auxDijkstra > auxSoma)
@@ -99,11 +118,16 @@ public:
 
 private:
 	list<int>* listaAdjascente = new list<int>[Controle::qtdeMaxVertice];
-	int Matriz[Controle::qtdeMaxVertice][Controle::qtdeMaxVertice];
+	int MatrizPesoTempo[Controle::qtdeMaxVertice][Controle::qtdeMaxVertice];
+	int MatrizPesoCusto[Controle::qtdeMaxVertice][Controle::qtdeMaxVertice];
 
-	void AdicionarArestaMatriz(int primeiroVertice, int segundoVertice, int peso)
+	void AdicionarArestaMatrizPesoCusto(int primeiroVertice, int segundoVertice, int peso)
 	{
-		Matriz[primeiroVertice][segundoVertice] = peso;
+		MatrizPesoCusto[primeiroVertice][segundoVertice] = peso;
+	}
+	void AdicionarArestaMatrizPesoDistancia(int primeiroVertice, int segundoVertice, int peso)
+	{
+		MatrizPesoTempo[primeiroVertice][segundoVertice] = peso;
 	}
 	void AdicionarArestaListaAdjascente(int primeiroVertice, int segundoVertice)
 	{
