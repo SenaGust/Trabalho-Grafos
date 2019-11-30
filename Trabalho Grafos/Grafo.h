@@ -43,8 +43,6 @@ public:
 	}
 	void ExibirMatrizGrafoCusto()
 	{
-		cout << "Exibindo matriz" << endl;
-
 		//Exibindo matriz
 		for (size_t linha = 0; linha < Controle::qtdeMaxVertice; linha++)
 		{
@@ -56,8 +54,6 @@ public:
 	}
 	void ExibirMatrizGrafoTempo()
 	{
-		cout << "Exibindo matriz" << endl;
-
 		//Exibindo matriz
 		for (size_t linha = 0; linha < Controle::qtdeMaxVertice; linha++)
 		{
@@ -194,7 +190,7 @@ public:
 		//7. 
 		return resultadoBuscaLargura;
 	}
-	
+
 	Grafo arvoreMinima()
 	{
 		/*
