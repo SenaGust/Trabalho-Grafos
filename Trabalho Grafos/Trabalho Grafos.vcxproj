@@ -151,12 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Arestas.cpp" />
     <ClCompile Include="Controle.cpp" />
     <ClCompile Include="Grafo.cpp" />
     <ClCompile Include="Trabalho Grafos.cpp" />
     <ClCompile Include="Vertice.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Arestas.h" />
     <ClInclude Include="Controle.h" />
     <ClInclude Include="Grafo.h" />
     <ClInclude Include="Vertice.h" />
